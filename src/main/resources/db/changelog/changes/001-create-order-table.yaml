@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001
+      author: yourname
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: order_id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: product
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: integer
+                  constraints:
+                    nullable: false
