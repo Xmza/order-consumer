@@ -1,36 +1,54 @@
-server:
-  port: 8082
-
+# order-consumer/src/main/resources/application.yml
 spring:
+  profiles:
+    active: dev
+    # По умолчанию профиль dev
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
       group-id: order-consumer-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.boot.trusted.packages: com.microserv.orderservice.model
-        spring.json.type.mapping: orderRequest:com.microserv.orderservice.model.OrderRequest
-    listener:
-      retry:
-        max-attempts: 3
-        multiplier: 2
-        initial-interval: 1000
-      missing-topics-fatal: false
-    template:
-      default-topic: order-created
-
+        spring.json.trusted.packages: com.microserv.orderservice.model
+        spring.json.value.default.type: com.microserv.orderservice.model.OrderRequest
+      # Настройки Kafka-консьюмера
   datasource:
-    url: jdbc:postgresql://localhost:5432/orderdb
-    username: postgres
-    password: password
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
-
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+    # Настройки JPA и Liquibase
+  main:
+    web-application-type: none
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  kafka:
+    bootstrap-servers: localhost:9092
+    # Локальный Kafka
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orderdb
+    username: postgres
+    password: password
+    # Локальная БД
+
+---
+spring:
+  config:
+    activate:
+      on-profile: k8s
+  kafka:
+    bootstrap-servers: kafka:9092
+    # Kafka в Kubernetes
+  datasource:
+    url: jdbc:postgresql://postgres:5432/orderdb
+    username: postgres
+    password: password
+    # БД в Kubernetes

@@ -1,0 +1,32 @@
+# order-consumer/kubernetes/order-consumer-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-consumer
+  template:
+    metadata:
+      labels:
+        app: order-consumer
+    spec:
+      containers:
+        - name: order-consumer
+          image: order-consumer:latest
+
+          imagePullPolicy: Never
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "k8s"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-consumer
+spec:
+  selector:
+    app: order-consumer
+  type: ClusterIP

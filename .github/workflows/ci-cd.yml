@@ -1,0 +1,61 @@
+# order-consumer/.github/workflows/ci-cd.yml
+name: CI/CD for Order Consumer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Kloniruet repozitoriy
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+        # Ustanavlivaet JDK 17
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+        # Kompiliruet proekt
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        # Nastraivaet Docker Buildx
+
+      - name: Build Docker image
+        run: |
+          docker build -t order-consumer:latest .
+        # Sozdaet lokal'nyy obraz
+
+      - name: Install Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube start
+        # Zapuskaet Minikube
+
+      - name: Load Docker image into Minikube
+        run: |
+          minikube image load order-consumer:latest
+        # Zagruzhaet obraz v Minikube
+
+      - name: Deploy infrastructure
+        run: |
+          kubectl apply -f infrastructure/zookeeper-deployment.yaml
+          kubectl apply -f infrastructure/kafka-deployment.yaml
+          kubectl apply -f infrastructure/postgres-deployment.yaml
+        # Razvorachivaet infrastrukturu
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f kubernetes/order-consumer-deployment.yaml
+        # Deploit order-consumer
