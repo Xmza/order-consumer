@@ -53,7 +53,6 @@ jobs:
           kubectl apply -f infrastructure/zookeeper-deployment.yaml
           kubectl apply -f infrastructure/kafka-deployment.yaml
           kubectl apply -f infrastructure/postgres-deployment.yaml
-        # Разворачивает инфраструктуру
           kubectl wait --for=condition=ready pod -l app=zookeeper --timeout=120s
           kubectl wait --for=condition=ready pod -l app=kafka --timeout=120s
           kubectl wait --for=condition=ready pod -l app=postgres --timeout=120s
