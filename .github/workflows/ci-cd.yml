@@ -54,6 +54,9 @@ jobs:
           kubectl apply -f infrastructure/kafka-deployment.yaml
           kubectl apply -f infrastructure/postgres-deployment.yaml
         # Разворачивает инфраструктуру
+          kubectl wait --for=condition=ready pod -1 app=zookeeper --timeout=120s
+          kubectl wait --for=condition=ready pod -1 app=kafka --timeout=120s
+          kubectl wait --for=condition=ready pod -1 app=postgres --timeout=120s
 
       - name: Deploy to Minikube
         run: |

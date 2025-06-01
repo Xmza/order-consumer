@@ -52,3 +52,22 @@ spring:
     username: postgres
     password: password
     # БД в Kubernetes
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  kafka:
+    bootstrap-servers: localhost:9092
+  datasource:
+    url: jdbc:h2:mem:testdb:DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
