@@ -1,4 +1,4 @@
-# infrastructure/kafka-deployment.yaml
+# order-consumer/infrastructure/kafka-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:

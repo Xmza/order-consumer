@@ -1,3 +1,4 @@
+# order-consumer/infrastructure/zookeeper-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,12 +16,13 @@ spec:
       containers:
         - name: zookeeper
           image: confluentinc/cp-zookeeper:7.2.1
+          # Официальный образ Zookeeper
           ports:
             - containerPort: 2181
           env:
             - name: ZOOKEEPER_CLIENT_PORT
               value: "2181"
-
+              # Порт для клиентских подключений
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +35,4 @@ spec:
     - port: 2181
       targetPort: 2181
   type: ClusterIP
+  # Внутренний сервис для Zookeeper
