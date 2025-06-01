@@ -2,7 +2,6 @@
 spring:
   profiles:
     active: dev
-    # По умолчанию профиль dev
   kafka:
     consumer:
       group-id: order-consumer-group
@@ -12,16 +11,13 @@ spring:
       properties:
         spring.json.trusted.packages: com.microserv.orderservice.model
         spring.json.value.default.type: com.microserv.orderservice.model.OrderRequest
-      # Настройки Kafka-консьюмера
-  datasource:
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-    # Настройки JPA и Liquibase
+  # Настройки JPA и Liquibase
   main:
     web-application-type: none
 
@@ -32,12 +28,11 @@ spring:
       on-profile: dev
   kafka:
     bootstrap-servers: localhost:9092
-    # Локальный Kafka
   datasource:
     url: jdbc:postgresql://localhost:5432/orderdb
     username: postgres
     password: password
-    # Локальная БД
+    driver-class-name: org.postgresql.Driver
 
 ---
 spring:
@@ -46,12 +41,11 @@ spring:
       on-profile: k8s
   kafka:
     bootstrap-servers: kafka:9092
-    # Kafka в Kubernetes
   datasource:
     url: jdbc:postgresql://postgres:5432/orderdb
     username: postgres
     password: password
-    # БД в Kubernetes
+    driver-class-name: org.postgresql.Driver
 
 ---
 spring:
@@ -61,7 +55,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
   datasource:
-    url: jdbc:h2:mem:testdb:DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     username: sa
     password:
     driver-class-name: org.h2.Driver
