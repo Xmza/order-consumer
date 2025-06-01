@@ -14,48 +14,48 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        # Kloniruet repozitoriy
+        # Клонирует репозиторий
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-        # Ustanavlivaet JDK 17
+        # Устанавливает JDK 17
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests
-        # Kompiliruet proekt
+        run: mvn clean install
+        # Компилирует проект
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        # Nastraivaet Docker Buildx
+        # Настраивает Docker Buildx
 
       - name: Build Docker image
         run: |
           docker build -t order-consumer:latest .
-        # Sozdaet lokal'nyy obraz
+        # Создает локальный образ
 
       - name: Install Minikube
         run: |
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube start
-        # Zapuskaet Minikube
+        # Запускает Minikube
 
       - name: Load Docker image into Minikube
         run: |
           minikube image load order-consumer:latest
-        # Zagruzhaet obraz v Minikube
+        # Загружает образ в Minikube
 
       - name: Deploy infrastructure
         run: |
           kubectl apply -f infrastructure/zookeeper-deployment.yaml
           kubectl apply -f infrastructure/kafka-deployment.yaml
           kubectl apply -f infrastructure/postgres-deployment.yaml
-        # Razvorachivaet infrastrukturu
+        # Разворачивает инфраструктуру
 
       - name: Deploy to Minikube
         run: |
           kubectl apply -f kubernetes/order-consumer-deployment.yaml
-        # Deploit order-consumer
+        # Деплоит order-consumer
