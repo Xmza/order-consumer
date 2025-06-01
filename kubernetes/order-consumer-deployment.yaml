@@ -21,12 +21,3 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "k8s"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: order-consumer
-spec:
-  selector:
-    app: order-consumer
-  type: ClusterIP
